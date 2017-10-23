@@ -1,8 +1,8 @@
 package local.tictactoe
 
-object Renderer {
+object Render {
 
-  def render(state: State): String = {
+  def board(state: State): String = {
 
     val glyphs: Map[(Int, Int), Char] =
       state.board.map { kv => (kv._1, renderPiece(kv._2)) }

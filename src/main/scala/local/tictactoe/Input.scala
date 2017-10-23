@@ -1,11 +1,11 @@
 package local.tictactoe
 
+import scala.io.StdIn.readLine
 import scala.util.matching.Regex
 
-object InputParser {
+object Input {
 
-  def getInput(state: State): Event =
-    parse(state, scala.io.StdIn.readLine("> "))
+  def getInput(state: State): Event = parse(state, readLine("> "))
 
   val matchMove: Regex = "([123])([123])".r
 

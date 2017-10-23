@@ -1,6 +1,6 @@
 package local.tictactoe
 
-object GameLogic {
+object Game {
 
   def winner(state: State): Option[Piece] = {
 
