@@ -5,16 +5,16 @@ object Game {
   def turn(state: State, action: PlayerAction): State = action match {
 
     case Move(p, (i, j)) => state.board(i, j) match {
-      case None => State(state.idx, state.board.updated((i,j), Some(p)), next(p))
+      case None => State(state.idx, state.board.updated((i,j), Some(p)), swap(p))
       case Some(_) => state
     }
   }
 
-  def next(p: Piece): Piece = p match { case X => O; case O => X }
+  def swap(p: Piece): Piece = p match { case X => O; case O => X }
 
   def winner(state: State): Option[Piece] = {
 
-    val State(idx, board, next) = state
+    val State(idx, board, _) = state
 
     def row(i: Int): List[Option[Piece]] =
       idx.map(j => board(i, j))

@@ -7,7 +7,8 @@ object Render {
     val glyphs: Map[(Int, Int), String] =
       state.board.map { kv => (kv._1, glyph(kv._2)) }
 
-    val hrule: String = state.idx.map(_ => "---").mkString("", "+", "\n")
+    val hrule: String =
+      state.idx.map(_ => "---").mkString("", "+", "\n")
 
     def row(i: Int): String =
       state.idx.map(j => glyphs(i, j)).mkString(" ", " | ", " \n")
