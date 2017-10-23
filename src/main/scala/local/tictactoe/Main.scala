@@ -2,32 +2,33 @@ package local.tictactoe
 
 object Main extends App {
 
-  def step(state: State, event: Event): State = event match {
-
-    case Move(p, (i, j)) => state.board(i, j) match {
-      case None => State(state.board.updated((i,j), Some(p)), Game.turn(p))
-      case Some(_) => state
-    }
-  }
-
-  def run(state: State): Unit = {
+  def loop(state: State): Unit = {
 
     println(Render.board(state))
 
     (Game.winner(state), Game.full(state)) match {
       case (Some(p), _) => println(Render.winner(p))
-      case (None, true) => println(Render.tie)
-      case _ => run(step(state, Input.getInput(state)))
+      case (_, true) => println(Render.tie)
+      case _ =>
+        println(Render.nextToMove(state.nextToMove))
+        Input.event(state) match {
+          case Quit => println(Render.quit); sys.exit(0)
+          case Action(a) => loop(Game.turn(state, a))
+      }
     }
   }
 
-  val initialState: State = State(
-    board = (for {
-      i <- List(1, 2, 3)
-      j <- List(1, 2, 3)
-    } yield (i, j) -> None).toMap,
-    nextToMove = X
-  )
+  def entry(): Unit = {
+    println("Choose board size:")
+    val n = Input.size
+    val idx = (1 to n).toList
+    val init = State(
+      idx = idx,
+      board = (for { i <- idx; j <- idx } yield (i, j) -> None).toMap,
+      nextToMove = X
+    )
+    loop(init)
+  }
 
-  run(initialState)
+  entry()
 }

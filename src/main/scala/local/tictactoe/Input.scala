@@ -5,17 +5,32 @@ import scala.util.matching.Regex
 
 object Input {
 
-  def getInput(state: State): Event = parse(state, readLine("> "))
+  def size: Int = {
 
-  val matchMove: Regex = "([123])([123])".r
+    val matcher = "([0-9])".r
 
-  def parse(state: State, input: String): Event = input match {
+    readLine("> ") match {
+      case matcher(n) => n.toInt
+      case _ => size
+    }
+  }
 
-    case matchMove(i, j) =>
-      Move(state.nextToMove, (i.toInt, j.toInt))
+  def event(state: State): Event = parse(state, readLine("> ")) match {
+    case Right(event) => event
+    case Left(invalid) => println(s"Invalid input, $invalid"); event(state)
+  }
 
-    case invalid =>
-      println(s"Invalid input, $invalid")
-      getInput(state)
+  def parse(state: State, input: String): Either[String, Event] = {
+
+    val digits = state.idx.mkString
+
+    val matchQuit: Regex = "q".r
+    val matchMove: Regex = s"([$digits])([$digits])".r
+
+    input match {
+      case matchQuit() => Right(Quit)
+      case matchMove(i, j) => Right(Action(Move(state.nextToMove, (i.toInt, j.toInt))))
+      case invalid => Left(invalid)
+    }
   }
 }

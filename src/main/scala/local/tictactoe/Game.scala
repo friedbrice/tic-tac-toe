@@ -2,20 +2,32 @@ package local.tictactoe
 
 object Game {
 
+  def turn(state: State, action: PlayerAction): State = action match {
+
+    case Move(p, (i, j)) => state.board(i, j) match {
+      case None => State(state.idx, state.board.updated((i,j), Some(p)), next(p))
+      case Some(_) => state
+    }
+  }
+
+  def next(p: Piece): Piece = p match { case X => O; case O => X }
+
   def winner(state: State): Option[Piece] = {
 
+    val State(idx, board, next) = state
+
     def row(i: Int): List[Option[Piece]] =
-      List(1, 2, 3).map(j => state.board(i, j))
+      idx.map(j => board(i, j))
 
     def col(j: Int): List[Option[Piece]] =
-      List(1, 2, 3).map(i => state.board(i, j))
+      idx.map(i => board(i, j))
 
-    val rows = List(1, 2, 3).map(row)
-    val cols = List(1, 2, 3).map(col)
+    val rows = idx.map(row)
+    val cols = idx.map(col)
 
     val diags = List(
-      List(1, 2, 3).map(i => state.board(i, i)),
-      List(1, 2, 3).map(i => state.board(4-i, i))
+      idx.map(i => board(i, i)),
+      idx.map(i => board((idx.max + 1) - i, i))
     )
 
     (for {
@@ -24,12 +36,10 @@ object Game {
       if line.toSet.size == 1
     } yield line) match {
       case Nil => None
-      case List(winner,_,_)::_ => winner
+      case (winner::_)::_ => winner
     }
   }
 
-  def turn(p: Piece): Piece = p match { case X => O; case O => X }
-
   def full(state: State): Boolean =
-    state.board.count(kv => kv._2.isDefined) == 9
+    state.board.count(_._2.isDefined) == state.idx.length * state.idx.length
 }

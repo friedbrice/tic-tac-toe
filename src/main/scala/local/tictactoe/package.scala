@@ -2,12 +2,18 @@ package local
 
 package object tictactoe {
 
-  sealed abstract class Piece extends Product with Serializable
+  sealed trait Piece
   case object X extends Piece
   case object O extends Piece
 
-  case class State(board: Map[(Int, Int), Option[Piece]], nextToMove: Piece)
+  type Board = Map[(Int, Int), Option[Piece]]
 
-  sealed abstract class Event extends Product with Serializable
-  case class Move(player: Piece, move: (Int, Int)) extends Event
+  case class State(idx: List[Int], board: Board, nextToMove: Piece)
+
+  sealed trait PlayerAction
+  case class Move(player: Piece, move: (Int, Int)) extends PlayerAction
+
+  sealed trait Event
+  case object Quit extends Event
+  case class Action(action: PlayerAction) extends Event
 }
