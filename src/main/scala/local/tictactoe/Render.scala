@@ -5,7 +5,7 @@ object Render {
   def board(state: State): String = {
 
     val glyphs: Map[(Int, Int), String] =
-      state.board.map { kv => (kv._1, glyph(kv._2)) }
+      state.board.map { case (k, v) => (k, glyph(v)) }
 
     val hrule: String =
       state.idx.map(_ => "---").mkString("", "+", "\n")
@@ -22,11 +22,13 @@ object Render {
     case Some(O) => "O"
   }
 
-  def nextToMove(p: Piece): String = s"Next to move: $p"
+  def next(p: Piece): String = s"Next to move: $p"
 
   def winner(p: Piece): String = s"$p wins!"
 
   val tie: String = "Tie."
 
   val quit: String = "Thanks for playing!"
+
+  val choose: String = "Choose board size:"
 }

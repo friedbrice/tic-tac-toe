@@ -8,7 +8,7 @@ package object tictactoe {
 
   type Board = Map[(Int, Int), Option[Piece]]
 
-  case class State(idx: List[Int], board: Board, nextToMove: Piece)
+  case class State(idx: List[Int], board: Board, next: Piece)
 
   sealed trait PlayerAction
   case class Move(player: Piece, move: (Int, Int)) extends PlayerAction

@@ -4,9 +4,11 @@ object Game {
 
   def turn(state: State, action: PlayerAction): State = action match {
 
-    case Move(p, (i, j)) => state.board(i, j) match {
-      case None => State(state.idx, state.board.updated((i,j), Some(p)), swap(p))
+    case Move(piece, (i, j)) => state.board(i, j) match {
       case Some(_) => state
+      case None =>
+        val newBoard = state.board.updated((i, j), Some(piece))
+        State(state.idx, newBoard, swap(piece))
     }
   }
 
@@ -16,14 +18,8 @@ object Game {
 
     val State(idx, board, _) = state
 
-    def row(i: Int): List[Option[Piece]] =
-      idx.map(j => board(i, j))
-
-    def col(j: Int): List[Option[Piece]] =
-      idx.map(i => board(i, j))
-
-    val rows = idx.map(row)
-    val cols = idx.map(col)
+    val rows = idx.map(i => idx.map(j => board(i, j)))
+    val cols = idx.map(j => idx.map(i => board(i, j)))
 
     val diags = List(
       idx.map(i => board(i, i)),
@@ -40,6 +36,6 @@ object Game {
     }
   }
 
-  def full(state: State): Boolean =
+  def filled(state: State): Boolean =
     state.board.count(_._2.isDefined) == state.idx.length * state.idx.length
 }

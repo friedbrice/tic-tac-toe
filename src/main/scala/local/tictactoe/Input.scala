@@ -7,10 +7,10 @@ object Input {
 
   def size: Int = {
 
-    val matcher = "([0-9])".r
+    val matchDigit = "(\\d)".r
 
     readLine("> ") match {
-      case matcher(n) => n.toInt
+      case matchDigit(n) => n.toInt
       case _ => size
     }
   }
@@ -29,7 +29,7 @@ object Input {
 
     input match {
       case matchQuit() => Right(Quit)
-      case matchMove(i, j) => Right(Action(Move(state.nextToMove, (i.toInt, j.toInt))))
+      case matchMove(i, j) => Right(Action(Move(state.next, (i.toInt, j.toInt))))
       case invalid => Left(invalid)
     }
   }
